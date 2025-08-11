@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .custom-scroll {
+    scrollbar-width: none;
+  }
+  .custom-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+html[data-theme-light="slate"] {
+  --bg-light: #f1f5f9;
+  --text-light: #0f172a;
+  --card-bg-light: #ffffff;
+  --accent-light: #4f46e5;
+  --accent-text-light: #ffffff;
+  --input-bg-light: #e2e8f0;
+  --dashed-border-light: #cbd5e1;
+  --secondary-btn-bg-light: #e2e8f0;
+  --secondary-btn-text-light: #1e293b;
+  --secondary-btn-hover-bg-light: #cbd5e1;
+}
+html[data-theme-light="sky"] {
+  --bg-light: #f0f9ff;
+  --text-light: #082f49;
+  --card-bg-light: #e0f2fe;
+  --accent-light: #0ea5e9;
+  --accent-text-light: #ffffff;
+  --input-bg-light: #e0f2fe;
+  --dashed-border-light: #bae6fd;
+  --secondary-btn-bg-light: #e0f2fe;
+  --secondary-btn-text-light: #0c4a6e;
+  --secondary-btn-hover-bg-light: #bae6fd;
+}
+html[data-theme-light="rose"] {
+  --bg-light: #fff1f2;
+  --text-light: #500724;
+  --card-bg-light: #ffe4e6;
+  --accent-light: #e11d48;
+  --accent-text-light: #ffffff;
+  --input-bg-light: #ffe4e6;
+  --dashed-border-light: #fecdd3;
+  --secondary-btn-bg-light: #ffe4e6;
+  --secondary-btn-text-light: #881337;
+  --secondary-btn-hover-bg-light: #fecdd3;
+}
+html[data-theme-dark="slate"] {
+  --bg-dark: #0f172a;
+  --text-dark: #f1f5f9;
+  --card-bg-dark: #1e293b;
+  --accent-dark: #6366f1;
+  --accent-text-dark: #ffffff;
+  --input-bg-dark: #334155;
+  --dashed-border-dark: #475569;
+  --secondary-btn-bg-dark: #334155;
+  --secondary-btn-text-dark: #e2e8f0;
+  --secondary-btn-hover-bg-dark: #475569;
+}
+html[data-theme-dark="amber"] {
+  --bg-dark: #18181b;
+  --text-dark: #fef3c7;
+  --card-bg-dark: #27272a;
+  --accent-dark: #f59e0b;
+  --accent-text-dark: #18181b;
+  --input-bg-dark: #3f3f46;
+  --dashed-border-dark: #52525b;
+  --secondary-btn-bg-dark: #3f3f46;
+  --secondary-btn-text-dark: #e4e4e7;
+  --secondary-btn-hover-bg-dark: #52525b;
+}
+html[data-theme-dark="teal"] {
+  --bg-dark: #134e4a;
+  --text-dark: #ccfbf1;
+  --card-bg-dark: #115e59;
+  --accent-dark: #2dd4bf;
+  --accent-text-dark: #0f172a;
+  --input-bg-dark: #0f766e;
+  --dashed-border-dark: #0d9488;
+  --secondary-btn-bg-dark: #0f766e;
+  --secondary-btn-text-dark: #ccfbf1;
+  --secondary-btn-hover-bg-dark: #0d9488;
+}
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.dark body {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.card {
+  background-color: var(--card-bg-light);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.dark .card {
+  background-color: var(--card-bg-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -2px rgba(0, 0, 0, 0.3);
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+.dark .card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 4px 6px -4px rgba(0, 0, 0, 0.4);
+}
+
+.accent-bg {
+  background-color: var(--accent-light);
+}
+.accent-text {
+  color: var(--accent-text-light);
+}
+.accent-color {
+  color: var(--accent-light);
+}
+.dark .accent-bg {
+  background-color: var(--accent-dark);
+}
+.dark .accent-text {
+  color: var(--accent-text-dark);
+}
+.dark .accent-color {
+  color: var(--accent-dark);
+}
+.modal-hidden {
+  display: none;
+  opacity: 0;
+}
+.modal-visible {
+  display: flex;
+  opacity: 1;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+.palette-selector {
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.palette-selector.active {
+  border-color: var(--accent-light);
+}
+.dark .palette-selector.active {
+  border-color: var(--accent-dark);
+}
+.folder-btn.active {
+  background-color: var(--accent-light);
+  color: var(--accent-text-light);
+}
+.dark .folder-btn.active {
+  background-color: var(--accent-dark);
+  color: var(--accent-text-dark);
+}
+.themed-input {
+  background-color: var(--input-bg-light);
+  border: 1px solid transparent;
+}
+.themed-input:focus {
+  --tw-ring-color: var(--accent-light);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--tw-ring-color);
+}
+.dark .themed-input {
+  background-color: var(--input-bg-dark);
+}
+.dark .themed-input:focus {
+  --tw-ring-color: var(--accent-dark);
+}
+.themed-dashed-btn {
+  border-color: var(--dashed-border-light);
+  color: var(--dashed-border-light);
+}
+.themed-dashed-btn:hover {
+  background-color: var(--input-bg-light);
+}
+.dark .themed-dashed-btn {
+  border-color: var(--dashed-border-dark);
+  color: var(--dashed-border-dark);
+}
+.dark .themed-dashed-btn:hover {
+  background-color: var(--input-bg-dark);
+}
+.themed-secondary-btn {
+  background-color: var(--secondary-btn-bg-light);
+  color: var(--secondary-btn-text-light);
+}
+.themed-secondary-btn:hover {
+  background-color: var(--secondary-btn-hover-bg-light);
+}
+.dark .themed-secondary-btn {
+  background-color: var(--secondary-btn-bg-dark);
+  color: var(--secondary-btn-text-dark);
+}
+.dark .themed-secondary-btn:hover {
+  background-color: var(--secondary-btn-hover-bg-dark);
+}
+#note-preview h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+#note-preview h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+#note-preview h3 {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+#note-preview b,
+#note-preview strong {
+  font-weight: bold;
+}
+#note-preview i,
+#note-preview em {
+  font-style: italic;
+}
+#note-preview u {
+  text-decoration: underline;
+}
+
+#note-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+#note-preview th,
+#note-preview td {
+  border: 1px solid var(--dashed-border-light);
+  padding: 8px;
+  text-align: left;
+}
+.dark #note-preview th,
+.dark #note-preview td {
+  border-color: var(--dashed-border-dark);
+}

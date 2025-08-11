@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es" data-theme-light="slate" data-theme-dark="slate">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'%3E%3Cpath d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen">
+    <div id="app-container" class="p-4 sm:p-6 lg:p-8">
+      <header class="flex justify-between items-center mb-8">
+        <div>
+          <h1 id="greeting" class="text-2xl sm:text-3xl font-bold"></h1>
+          <p id="clock" class="text-lg text-gray-500 dark:text-gray-400">
+            --:--
+          </p>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-4">
+          <button
+            id="notes-btn"
+            class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </button>
+          <button
+            id="profile-btn"
+            class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+          </button>
+          <button
+            id="theme-toggle-btn"
+            class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+          >
+            <svg
+              id="sun-icon"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+            <svg
+              id="moon-icon"
+              class="h-6 w-6 hidden"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              />
+            </svg>
+          </button>
+          <button
+            id="settings-btn"
+            class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <section id="folders-section" class="mb-10">
+        <h2 class="text-xl font-bold mb-4">Carpetas</h2>
+        <div
+          id="folders-grid"
+          class="flex items-center gap-4 overflow-x-auto py-2"
+        ></div>
+      </section>
+      <main>
+        <h2 id="shortcuts-title" class="text-xl font-bold mb-4">Todos</h2>
+        <div
+          id="shortcuts-grid"
+          class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 sm:gap-6"
+        ></div>
+      </main>
+    </div>
+
+    <div
+      id="shortcut-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-40"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4">
+        <h2 id="modal-title" class="text-xl font-bold mb-4">
+          Añadir Acceso Directo
+        </h2>
+        <form id="shortcut-form">
+          <input type="hidden" id="shortcut-id" />
+          <div class="mb-4">
+            <label for="shortcut-url" class="block text-sm font-medium mb-1"
+              >URL</label
+            ><input
+              type="url"
+              id="shortcut-url"
+              placeholder="https://ejemplo.com"
+              required
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="off"
+            />
+          </div>
+          <div class="mb-4">
+            <label for="shortcut-name" class="block text-sm font-medium mb-1"
+              >Nombre</label
+            ><input
+              type="text"
+              id="shortcut-name"
+              placeholder="Mi Sitio Favorito"
+              required
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="off"
+            />
+          </div>
+          <div class="mb-6">
+            <label for="shortcut-image" class="block text-sm font-medium mb-1"
+              >URL de imagen (Opcional)</label
+            ><input
+              type="url"
+              id="shortcut-image"
+              placeholder="Dejar en blanco para autodetectar"
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="off"
+            />
+          </div>
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Cancelar</button
+            ><button
+              type="submit"
+              class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="folder-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-40"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4">
+        <h2 class="text-xl font-bold mb-4">Nueva Carpeta</h2>
+        <form id="folder-form">
+          <div class="mb-6">
+            <label for="folder-name" class="block text-sm font-medium mb-1"
+              >Nombre de la Carpeta</label
+            ><input
+              type="text"
+              id="folder-name"
+              placeholder="Ej: Trabajo"
+              required
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="off"
+            />
+          </div>
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Cancelar</button
+            ><button
+              type="submit"
+              class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Crear Carpeta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="notes-manager-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div
+        class="card p-6 rounded-2xl w-11/12 max-w-2xl m-4 h-5/6 flex flex-col"
+      >
+        <h2 class="text-xl font-bold mb-4 flex-shrink-0">Mis Notas</h2>
+        <div class="flex-grow overflow-y-auto pr-2 mb-4 custom-scroll">
+          <div id="notes-list" class="space-y-3 pt-2"></div>
+        </div>
+        <div
+          class="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between items-center"
+        >
+          <button
+            id="add-note-btn"
+            class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+          >
+            Añadir Nueva Nota</button
+          ><button
+            type="button"
+            class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="note-editor-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-[60]"
+    >
+      <div
+        class="card p-6 rounded-2xl w-11/12 max-w-4xl m-4 h-5/6 flex flex-col"
+      >
+        <h2 class="text-xl font-bold mb-4">Editor de Nota</h2>
+        <form id="note-editor-form" class="flex flex-col flex-grow">
+          <input type="hidden" id="note-id" />
+
+          <div class="flex flex-col flex-grow relative">
+            <div
+              id="note-toolbar"
+              class="flex items-center gap-2 p-2 rounded-md themed-input flex-wrap"
+            >
+              <select
+                id="heading-selector"
+                class="themed-secondary-btn rounded-md p-1 font-semibold text-sm cursor-pointer"
+              >
+                <option value="">Encabezado</option>
+                <option value="h1">Título 1</option>
+                <option value="h2">Título 2</option>
+                <option value="h3">Título 3</option>
+                <option value="h4">Título 4</option>
+                <option value="h5">Título 5</option>
+                <option value="h6">Título 6</option>
+              </select>
+              <button
+                type="button"
+                data-tag="b"
+                class="p-2 rounded-md themed-secondary-btn font-bold"
+                title="Negrita"
+              >
+                B
+              </button>
+              <button
+                type="button"
+                data-tag="i"
+                class="p-2 rounded-md themed-secondary-btn italic"
+                title="Cursiva"
+              >
+                I
+              </button>
+              <button
+                type="button"
+                data-tag="u"
+                class="p-2 rounded-md themed-secondary-btn underline"
+                title="Subrayado"
+              >
+                U
+              </button>
+              <button
+                type="button"
+                data-tag="s"
+                class="p-2 rounded-md themed-secondary-btn line-through"
+                title="Tachado"
+              >
+                S
+              </button>
+              <div
+                class="border-l border-gray-300 dark:border-gray-600 h-6 mx-1"
+              ></div>
+              <button
+                type="button"
+                id="add-custom-c-tag"
+                class="p-2 rounded-md themed-secondary-btn font-mono"
+                title="Añadir variable <c>"
+              >
+                &lt;c&gt;
+              </button>
+              <button
+                type="button"
+                id="open-calc-modal-btn"
+                class="p-2 rounded-md themed-secondary-btn"
+                title="Crear Operación"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zM6 7a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm0 4a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm6-4a1 1 0 100 2h2a1 1 0 100-2h-2zm-2 4a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div class="relative flex-grow flex pt-4">
+              <div
+                id="note-html-editor-container"
+                class="w-1/2 h-full pr-2 hidden"
+              >
+                <textarea
+                  id="note-html-editor"
+                  class="w-full h-full p-2 rounded-md themed-input resize-none font-mono text-sm"
+                  placeholder="<h1>Título</h1><p>Escribe tu nota aquí...</p>"
+                ></textarea>
+              </div>
+
+              <div id="note-preview-container" class="w-full h-full">
+                <div
+                  id="note-preview"
+                  class="w-full h-full p-2 rounded-md themed-input overflow-y-auto"
+                  contenteditable="true"
+                ></div>
+              </div>
+
+              <button
+                type="button"
+                id="toggle-html-editor-tab"
+                class="absolute top-4 -left-0.5 transform -translate-x-full h-24 w-8 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-l-lg shadow-md transition-all duration-300 flex items-center justify-center cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-500"
+              >
+                <span
+                  class="transform rotate-[-90deg] whitespace-nowrap font-semibold text-sm"
+                  >HTML</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center gap-4 pt-4">
+            <div>
+              <select
+                id="export-note-format"
+                class="themed-secondary-btn rounded-md p-1.5 font-semibold text-sm cursor-pointer"
+              >
+                <option value="" selected>Exportar como...</option>
+                <option value="txt">Texto (.txt)</option>
+                <option value="html">HTML (.html)</option>
+                <option value="png">Imagen (.png)</option>
+                <option value="pdf">Documento (.pdf)</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div id="save-status-indicator" title="Estado del guardado">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6 text-gray-400 transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3l-4 4-4-4zM8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M8 7h8"
+                  />
+                </svg>
+              </div>
+              <button
+                type="button"
+                class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="settings-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div
+        class="card p-6 rounded-2xl w-11/12 max-w-xl m-4 overflow-y-auto max-h-[80vh] custom-scroll"
+      >
+        <h2 class="text-xl font-bold mb-6">Configuración</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Zona Horaria</h3>
+            <select
+              id="timezone-selector"
+              class="w-full p-2 rounded-md themed-input"
+            >
+              <option>Cargando zonas horarias...</option>
+            </select>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Tema Claro</h3>
+            <div id="light-palettes" class="grid grid-cols-3 gap-4">
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="slate"
+              >
+                <p class="font-semibold text-sm mb-1">Slate</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #f1f5f9"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #4f46e5"
+                  ></div>
+                </div>
+              </div>
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="sky"
+              >
+                <p class="font-semibold text-sm mb-1">Sky</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #f0f9ff"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #0ea5e9"
+                  ></div>
+                </div>
+              </div>
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="rose"
+              >
+                <p class="font-semibold text-sm mb-1">Rose</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #fff1f2"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #e11d48"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Tema Oscuro</h3>
+            <div id="dark-palettes" class="grid grid-cols-3 gap-4">
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="slate"
+              >
+                <p class="font-semibold text-sm mb-1">Slate</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #0f172a"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #6366f1"
+                  ></div>
+                </div>
+              </div>
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="amber"
+              >
+                <p class="font-semibold text-sm mb-1">Amber</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #18181b"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #f59e0b"
+                  ></div>
+                </div>
+              </div>
+              <div
+                class="palette-selector rounded-lg p-2 cursor-pointer"
+                data-palette="teal"
+              >
+                <p class="font-semibold text-sm mb-1">Teal</p>
+                <div class="flex gap-1">
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #134e4a"
+                  ></div>
+                  <div
+                    class="w-1/2 h-8 rounded"
+                    style="background-color: #2dd4bf"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="border-gray-300 dark:border-gray-600 my-6" />
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Gestión de Datos</h3>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <button
+                id="export-btn"
+                class="w-full text-center px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+              >
+                Exportar Datos
+              </button>
+              <label
+                for="import-file"
+                class="w-full text-center px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors cursor-pointer"
+                >Importar Datos</label
+              >
+              <input
+                type="file"
+                id="import-file"
+                class="hidden"
+                accept=".json"
+                autocomplete="off"
+              />
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Usa "Importar" para cargar un archivo <code>.json</code> de
+              respaldo. Esto restaurará tus datos de personalización y tu bóveda
+              cifrada.
+            </p>
+          </div>
+          <hr class="border-gray-300 dark:border-gray-600 my-6" />
+          <div>
+            <h3 class="text-lg font-semibold mb-3">Seguridad de la Bóveda</h3>
+            <button
+              id="reset-vault-btn"
+              class="w-full text-center px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Recuperar Acceso a la Bóveda
+            </button>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Si olvidaste tu contraseña maestra, usa esta opción con tu archivo
+              de respaldo QR para recuperar el acceso y establecer una nueva
+              contraseña.
+            </p>
+          </div>
+          <hr class="border-gray-300 dark:border-gray-600 my-6" />
+          <div>
+            <h3 class="text-lg font-semibold mb-3 text-red-500">
+              Zona de Peligro
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              La siguiente acción es irreversible. Asegúrate de tener un
+              respaldo si deseas conservar tus datos.
+            </p>
+            <button
+              id="delete-all-data-btn"
+              data-step="1"
+              class="w-full text-center px-4 py-2 rounded-md font-semibold bg-red-500 hover:bg-red-600 text-white transition-colors"
+            >
+              Borrar Todos los Datos
+            </button>
+          </div>
+        </div>
+        <div class="flex justify-end mt-8">
+          <button
+            type="button"
+            class="cancel-btn px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="vault-setup-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4">
+        <h2 class="text-xl font-bold mb-2">Configurar Bóveda Segura</h2>
+        <p class="text-sm mb-4 text-gray-600 dark:text-gray-400">
+          Crea una contraseña maestra para cifrar tus datos. Esta contraseña no
+          se guarda en ningún sitio, ¡no la olvides!
+        </p>
+        <form id="vault-setup-form">
+          <div class="mb-4">
+            <label
+              for="master-password-setup"
+              class="block text-sm font-medium mb-1"
+              >Contraseña Maestra</label
+            ><input
+              type="password"
+              id="master-password-setup"
+              required
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="new-password"
+            />
+          </div>
+          <div class="flex justify-end gap-3">
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Crear Bóveda
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="vault-qr-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4 text-center">
+        <h2 class="text-xl font-bold mb-2">
+          ¡IMPORTANTE! Tu Respaldo de Recuperación
+        </h2>
+        <p class="text-sm mb-4 text-gray-600 dark:text-gray-400">
+          Este archivo QR es la
+          <strong>única forma de recuperar tu contraseña</strong> si la olvidas.
+          Descárgalo y guárdalo en un lugar muy seguro.
+        </p>
+        <div
+          id="qr-code-container"
+          class="flex justify-center p-4 bg-white rounded-lg mb-4"
+        ></div>
+        <div class="flex justify-center gap-3">
+          <button
+            id="download-qr-btn"
+            class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+          >
+            Descargar Respaldo QR</button
+          ><button
+            id="close-qr-btn"
+            class="px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+          >
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="vault-login-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4">
+        <h2 class="text-xl font-bold mb-4">Desbloquear Bóveda</h2>
+        <form id="vault-login-form">
+          <div class="mb-4">
+            <label
+              for="master-password-login"
+              class="block text-sm font-medium mb-1"
+              >Contraseña Maestra</label
+            ><input
+              type="password"
+              id="master-password-login"
+              required
+              class="w-full p-2 rounded-md themed-input"
+              autocomplete="current-password"
+            />
+          </div>
+          <p id="login-error" class="text-red-500 text-sm mb-4 hidden">
+            Contraseña incorrecta.
+          </p>
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Cancelar</button
+            ><button
+              type="submit"
+              class="px-4 py-2 ml-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Desbloquear
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="vault-recovery-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-md m-4">
+        <h2 class="text-xl font-bold mb-4">Recuperar Acceso a la Bóveda</h2>
+        <p class="text-sm mb-4 text-gray-600 dark:text-gray-400">
+          Sube tu archivo de respaldo QR (.png). Si es válido, podrás establecer
+          una nueva contraseña maestra y recuperar el acceso a tus datos
+          guardados.
+        </p>
+        <form id="vault-recovery-form" class="space-y-4">
+          <div>
+            <label
+              for="recovery-backup-file"
+              class="block text-sm font-medium mb-1"
+              >Sube tu archivo de respaldo QR</label
+            ><input
+              type="file"
+              id="recovery-backup-file"
+              required
+              class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:font-semibold file:themed-secondary-btn"
+              accept=".png"
+              autocomplete="off"
+            />
+          </div>
+          <p id="recovery-error" class="text-red-500 text-sm hidden">
+            Error. El archivo de respaldo no es válido.
+          </p>
+          <div class="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Cancelar</button
+            ><button
+              type="submit"
+              class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Verificar y Continuar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      id="password-manager-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-50"
+    >
+      <div
+        class="card p-6 rounded-2xl w-11/12 max-w-2xl m-4 h-5/6 flex flex-col"
+      >
+        <h2 class="text-xl font-bold mb-4 flex-shrink-0">
+          Gestor de Contraseñas
+        </h2>
+        <div class="flex-grow overflow-y-auto pr-2 mb-4 custom-scroll">
+          <div id="passwords-list" class="space-y-3 pt-2"></div>
+        </div>
+        <div
+          class="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 pt-4"
+        >
+          <h3 class="text-lg font-semibold mb-3">Añadir Nueva Contraseña</h3>
+          <form
+            id="add-password-form"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <input
+              type="text"
+              id="new-password-desc"
+              placeholder="Descripción (ej: Email Personal)"
+              class="md:col-span-2 p-2 rounded-md themed-input"
+              autocomplete="off"
+            /><input
+              type="text"
+              id="new-password-email"
+              placeholder="Email (opcional)"
+              class="p-2 rounded-md themed-input"
+              autocomplete="off"
+            />
+            <div class="relative">
+              <input
+                type="text"
+                id="new-password-value"
+                placeholder="Contraseña"
+                required
+                class="w-full p-2 rounded-md themed-input"
+                autocomplete="off"
+              /><button
+                type="button"
+                id="generate-password-btn"
+                class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                title="Generar contraseña segura"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.96.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.532 1.532 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.532 1.532 0 01-.947-2.287c1.561-.379-1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+            <button
+              type="submit"
+              class="md:col-span-2 px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Guardar Contraseña
+            </button>
+          </form>
+        </div>
+        <div class="flex justify-end mt-4 flex-shrink-0">
+          <button
+            type="button"
+            class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+          >
+            Cerrar Bóveda
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="calculation-modal"
+      class="modal-hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center transition-opacity duration-300 z-[70]"
+    >
+      <div class="card p-6 rounded-2xl w-11/12 max-w-lg m-4">
+        <h2 class="text-xl font-bold mb-4">Crear Operación Matemática</h2>
+        <form id="calculation-form">
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2"
+              >1. Selecciona las variables a operar:</label
+            >
+            <div
+              id="calc-variable-list"
+              class="max-h-32 overflow-y-auto space-y-2 p-2 rounded-md themed-input"
+            >
+              <p class="text-gray-500">
+                No hay variables definidas en la nota.
+              </p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="calc-operator" class="block text-sm font-medium mb-1"
+              >2. Elige el operador:</label
+            >
+            <select
+              id="calc-operator"
+              class="w-full p-2 rounded-md themed-input"
+            >
+              <option value="+">Suma (+)</option>
+              <option value="-">Resta (-)</option>
+              <option value="*">Multiplicación (*)</option>
+              <option value="/">División (/)</option>
+            </select>
+          </div>
+          <div class="mb-6">
+            <label class="block text-sm font-medium mb-1"
+              >3. Expresión resultante:</label
+            >
+            <pre
+              id="calc-preview"
+              class="p-2 rounded-md themed-input font-mono text-lg"
+            ></pre>
+          </div>
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              class="cancel-btn px-4 py-2 rounded-md font-semibold themed-secondary-btn transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-md font-semibold accent-bg accent-text transition-colors"
+            >
+              Insertar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
