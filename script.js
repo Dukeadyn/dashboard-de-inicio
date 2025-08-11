@@ -420,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const processSymbolicCalculations = (html) => {
     let processedHtml = html;
     const variables = {};
+
     const varDefRegex = /<(c\d*)>([\s\S]*?)<\/\1>/g;
     processedHtml = processedHtml.replace(
       varDefRegex,
@@ -428,9 +429,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isNaN(numValue)) {
           variables[varName] = numValue;
         }
-        return value;
+        return `<span class="variable" contenteditable="false" data-original-html="${encodeURI(
+          match
+        )}">${value}</span>`;
       }
     );
+
     const expressionRegex =
       /<((?:c\d*|\d+\.?\d*)(?:[\+\-\*\/](?:c\d*|\d+\.?\d*))+?)>/g;
     processedHtml = processedHtml.replace(
@@ -448,7 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
           };
           const firstValue = getValue(operands[0]);
           if (firstValue === null) {
-            return `<span style="color: red;">(Error: Op. '${operands[0]}' inválido)</span>`;
+            return `<span contenteditable="false" style="color: red;">(Error: Op. '${operands[0]}' invÃ¡lido)</span>`;
           }
           let result = firstValue;
           for (let i = 0; i < operators.length; i++) {
@@ -456,7 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const nextOperandName = operands[i + 1];
             const nextOperandValue = getValue(nextOperandName);
             if (nextOperandValue === null) {
-              return `<span style="color: red;">(Error: Op. '${nextOperandName}' inválido)</span>`;
+              return `<span contenteditable="false" style="color: red;">(Error: Op. '${nextOperandName}' invÃ¡lido)</span>`;
             }
             switch (operator) {
               case "+":
@@ -470,18 +474,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
               case "/":
                 if (nextOperandValue === 0)
-                  return '<span style="color: red;">(Error: Div. por cero)</span>';
+                  return '<span contenteditable="false" style="color: red;">(Error: Div. por cero)</span>';
                 result /= nextOperandValue;
                 break;
             }
           }
-          return `<strong style="color: var(--accent-light);">${result}</strong>`;
+
+          return `<span class="calculation" contenteditable="false" data-original-html="${encodeURI(
+            match
+          )}"><strong style="color: var(--accent-light);">${result}</strong></span>`;
         } catch (e) {
-          return '<span style="color: red;">(Error en expr.)</span>';
+          return '<span contenteditable="false" style="color: red;">(Error en expr.)</span>';
         }
       }
     );
     return processedHtml;
+  };
+
+  const cleanupPreviewHtmlForSaving = (html) => {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    const protectedElements = tempDiv.querySelectorAll("[data-original-html]");
+
+    protectedElements.forEach((element) => {
+      const originalHtml = decodeURI(element.dataset.originalHtml);
+      element.outerHTML = originalHtml;
+    });
+
+    return tempDiv.innerHTML;
   };
 
   const generateNotePreview = (html) => {
@@ -872,7 +893,10 @@ document.addEventListener("DOMContentLoaded", () => {
   notePreview.addEventListener("input", () => {
     if (isSyncing) return;
     isSyncing = true;
-    noteHtmlEditor.value = notePreview.innerHTML;
+
+    const cleanHtml = cleanupPreviewHtmlForSaving(notePreview.innerHTML);
+    noteHtmlEditor.value = cleanHtml;
+
     isSyncing = false;
     clearTimeout(autoSaveTimer);
     autoSaveTimer = setTimeout(saveNote, 1500);
@@ -974,28 +998,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   noteHtmlEditor.addEventListener("keyup", (e) => {
     if (e.key === ">") {
-      // Cambiamos el disparador a '>' para más control
       const text = noteHtmlEditor.value;
       const cursorPos = noteHtmlEditor.selectionStart;
       const textBefore = text.substring(0, cursorPos);
 
-      // Busca una etiqueta abierta como <h1> o <p> justo antes del '>' que acabas de escribir
       const match = textBefore.match(/<([a-zA-Z0-9]+)>$/);
 
       if (match) {
         const tagName = match[1];
-        // Lista de etiquetas que no se autocierran (void elements)
         const selfClosingTags = ["br", "hr", "img", "input", "link", "meta"];
         if (selfClosingTags.includes(tagName.toLowerCase())) {
           return;
         }
 
-        // Inserta la etiqueta de cierre y coloca el cursor en medio
         const textAfter = text.substring(cursorPos);
         const newText = textBefore + `</${tagName}>` + textAfter;
 
         noteHtmlEditor.value = newText;
-        // Coloca el cursor justo en medio de las dos etiquetas
         noteHtmlEditor.selectionStart = cursorPos;
         noteHtmlEditor.selectionEnd = cursorPos;
         noteHtmlEditor.dispatchEvent(new Event("input"));
