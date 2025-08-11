@@ -973,21 +973,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   noteHtmlEditor.addEventListener("keyup", (e) => {
-    if (e.key === "<") {
+    if (e.key === ">") {
+      // Cambiamos el disparador a '>' para más control
       const text = noteHtmlEditor.value;
       const cursorPos = noteHtmlEditor.selectionStart;
-      const textBefore = text.substring(0, cursorPos - 1);
+      const textBefore = text.substring(0, cursorPos);
 
-      const match = textBefore.match(/<([a-zA-Z0-9]+)>\s*([^<]*)$/);
+      // Busca una etiqueta abierta como <h1> o <p> justo antes del '>' que acabas de escribir
+      const match = textBefore.match(/<([a-zA-Z0-9]+)>$/);
 
       if (match) {
         const tagName = match[1];
-        if (tagName.toLowerCase() === "br") {
+        // Lista de etiquetas que no se autocierran (void elements)
+        const selfClosingTags = ["br", "hr", "img", "input", "link", "meta"];
+        if (selfClosingTags.includes(tagName.toLowerCase())) {
           return;
         }
 
-        const newText = text.substring(0, cursorPos) + `/${tagName}>`;
-        noteHtmlEditor.value = newText + text.substring(cursorPos);
+        // Inserta la etiqueta de cierre y coloca el cursor en medio
+        const textAfter = text.substring(cursorPos);
+        const newText = textBefore + `</${tagName}>` + textAfter;
+
+        noteHtmlEditor.value = newText;
+        // Coloca el cursor justo en medio de las dos etiquetas
         noteHtmlEditor.selectionStart = cursorPos;
         noteHtmlEditor.selectionEnd = cursorPos;
         noteHtmlEditor.dispatchEvent(new Event("input"));
